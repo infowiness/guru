@@ -1,27 +1,446 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Tools Hub</title>
+    <style>
+        /* Modern CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --background-color: #f5f6fa;
+            --card-background: #ffffff;
+        }
 
-    <title>Hello, world!</title>
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
 
-    <!-- Optional JavaScript; choose one of the two! -->
+        /* Header Styles */
+        .header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        .header h1 {
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
 
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-    -->
-  </body>
+        /* Tool Grid Container */
+        .tools-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Tool Card Styles */
+        .tool-card {
+            background: var(--card-background);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tool-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .tool-card p {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Drop Zone Styles */
+        .drop-zone {
+            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: rgba(74, 144, 226, 0.05);
+        }
+
+        .drop-zone:hover {
+            background-color: rgba(74, 144, 226, 0.1);
+        }
+
+        .drop-zone p {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        /* Button Styles */
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        select.btn {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.5em;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        /* Preview Container Styles */
+        .preview-container {
+            margin-top: 1rem;
+            display: none;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background-color: #fff;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            display: block;
+            margin: 0 auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+        }
+
+        /* Download Button */
+        .download-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            display: none;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .download-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* File Preview List */
+        .file-preview-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .file-preview-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .file-preview-item:hover {
+            background: #e9ecef;
+        }
+
+        .file-preview-item i {
+            margin-right: 1rem;
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+
+        .remove-file {
+            margin-left: auto;
+            color: var(--accent-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .remove-file:hover {
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .tools-container {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .tool-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Previous HTML remains the same until the tool cards -->
+    <header class="header">
+        <h1>Online Tools Hub</h1>
+        <p>Free online tools for file conversion and image compression</p>
+    </header>
+    <!-- File Converter Card -->
+    <div class="tool-card">
+        <h3>File Converter</h3>
+        <p>Convert files between different formats</p>
+        <div class="drop-zone" id="converterDropZone">
+            <p>Drag & Drop files here or</p>
+            <button class="btn">Choose File</button>
+        </div>
+        <div class="preview-container" id="converterPreview">
+            <div class="file-info"></div>
+            <ul class="file-preview-list"></ul>
+        </div>
+        <select class="btn" id="convertFormat">
+            <option value="">Select Output Format</option>
+            <option value="pdf">PDF</option>
+            <option value="docx">DOCX</option>
+            <option value="jpg">JPG</option>
+            <option value="png">PNG</option>
+        </select>
+        <button class="btn convert-btn">Convert File</button>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        <button class="download-btn">Download Converted File</button>
+    </div>
+
+    <!-- Image Compressor Card -->
+    <div class="tool-card">
+        <h3>Image Compressor</h3>
+        <p>Compress your images without losing quality</p>
+        <div class="drop-zone" id="compressorDropZone">
+            <p>Drag & Drop images here or</p>
+            <button class="btn">Choose Image</button>
+        </div>
+        <div class="preview-container" id="compressorPreview">
+            <img class="preview-image" alt="Image preview">
+            <div class="file-info"></div>
+        </div>
+        <select class="btn" id="compressionLevel">
+            <option value="">Select Compression Level</option>
+            <option value="high">High Quality</option>
+            <option value="medium">Medium Quality</option>
+            <option value="low">Low Quality</option>
+        </select>
+        <button class="btn compress-btn">Compress Image</button>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        <button class="download-btn">Download Compressed Image</button>
+    </div>
+
+    <script>
+        // File preview handling
+        function showFilePreview(files, dropZoneId) {
+            const isCompressor = dropZoneId === 'compressorDropZone';
+            const previewContainer = document.querySelector(`#${dropZoneId.replace('DropZone', 'Preview')}`);
+            const fileInfo = previewContainer.querySelector('.file-info');
+
+            previewContainer.style.display = 'block';
+
+            if (isCompressor && files[0]) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const previewImage = previewContainer.querySelector('.preview-image');
+                        previewImage.src = e.target.result;
+                        fileInfo.textContent = `File: ${file.name} (${formatFileSize(file.size)})`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            } else {
+                const fileList = previewContainer.querySelector('.file-preview-list');
+                fileList.innerHTML = '';
+                Array.from(files).forEach(file => {
+                    const li = document.createElement('li');
+                    li.className = 'file-preview-item';
+                    li.innerHTML = `
+                        <i>📄</i>
+                        <span>${file.name} (${formatFileSize(file.size)})</span>
+                        <span class="remove-file">✕</span>
+                    `;
+                    fileList.appendChild(li);
+                });
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Enhanced file handling function
+        function handleFiles(files, dropZoneId) {
+            const toolCard = document.querySelector(`#${dropZoneId}`).closest('.tool-card');
+            const progressBar = toolCard.querySelector('.progress-bar');
+            const progress = progressBar.querySelector('.progress');
+            const downloadBtn = toolCard.querySelector('.download-btn');
+
+            // Show file preview
+            showFilePreview(files, dropZoneId);
+
+            // Show and animate progress bar
+            progressBar.style.display = 'block';
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        progressBar.style.display = 'none';
+                        progress.style.width = '0%';
+                        downloadBtn.style.display = 'block';
+                    }, 500);
+                } else {
+                    width++;
+                    progress.style.width = width + '%';
+                }
+            }, 20);
+        }
+
+        // Drag and drop functionality
+        document.querySelectorAll('.drop-zone').forEach(dropZone => {
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.backgroundColor = 'rgba(74, 144, 226, 0.2)';
+            });
+
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.style.backgroundColor = 'transparent';
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.backgroundColor = 'transparent';
+                const files = e.dataTransfer.files;
+                handleFiles(files, dropZone.id);
+            });
+        });
+
+        // Button click handlers
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', () => {
+                if (button.textContent === 'Choose File' || button.textContent === 'Choose Image') {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    if (button.textContent === 'Choose Image') {
+                        input.accept = 'image/*';
+                    }
+                    input.click();
+                    input.onchange = (e) => {
+                        handleFiles(e.target.files, button.closest('.tool-card').querySelector('.drop-zone').id);
+                    };
+                }
+            });
+        });
+
+        // Download button handlers
+        document.querySelectorAll('.download-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Simulate download - In a real application, this would be handled by your backend
+                const link = document.createElement('a');
+                link.href = '#'; // Replace with actual file URL
+                link.download = 'processed-file'; // Replace with actual filename
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+
+        // Remove file handler
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-file')) {
+                e.target.closest('.file-preview-item').remove();
+            }
+        });
+    </script>
+</body>
 </html>
